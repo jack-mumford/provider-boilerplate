@@ -39,6 +39,7 @@ func (p *ScaffoldingProvider) Metadata(ctx context.Context, req provider.Metadat
 	resp.Version = p.version
 }
 
+// Schema defines the provider-level schema for configuration data.
 func (p *ScaffoldingProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
@@ -82,7 +83,7 @@ func (p *ScaffoldingProvider) EphemeralResources(ctx context.Context) []func() e
 
 func (p *ScaffoldingProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewExampleDataSource,
+		NewEngineerDataSource,
 	}
 }
 
