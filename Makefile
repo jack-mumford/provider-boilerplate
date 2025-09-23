@@ -4,7 +4,8 @@
 GOOS?=$$(go env GOOS)
 GOARCH?=$$(go env GOARCH)
 
-plan: clean init provider resource datasource debug-allCombined
+plan: clean init provider datasource
+# plan: clean init provider resource datasource debug-allCombined
 
 build: main.go generate
 	go $@ -o terraform-provider-devops-bootcamp

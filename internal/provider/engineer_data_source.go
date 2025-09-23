@@ -3,6 +3,8 @@ package provider
 import (
 	"context"
 
+	"terraform-provider-devops/internal/provider/client"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -20,7 +22,7 @@ func NewEngineerDataSource() datasource.DataSource {
 
 // EngineerDataSource is the data source implementation.
 type EngineerDataSource struct {
-	client *Client
+	client *client.Client
 }
 
 // Metadata returns the data source type name.
@@ -36,7 +38,7 @@ func (d *EngineerDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id": schema.Int64Attribute{
+						"id": schema.StringAttribute{
 							Computed: true,
 						},
 						"name": schema.StringAttribute{
@@ -50,6 +52,25 @@ func (d *EngineerDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 			},
 		},
 	}
+}
+
+// From cascade
+// Configure receives the configured provider data and sets up the API client.
+func (d *EngineerDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+
+	c, ok := req.ProviderData.(*client.Client)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Data Source Configure Type",
+			"Provider data was not the expected *client.Client",
+		)
+		return
+	}
+
+	d.client = c
 }
 
 // Read refreshes the Terraform state with the latest data.
@@ -68,7 +89,7 @@ func (d *EngineerDataSource) Read(ctx context.Context, req datasource.ReadReques
 	// Map response body to model
 	for _, engineer := range engineers {
 		engineerState := engineersModel{
-			ID:    types.Int64Value(int64(engineer.ID)),
+			ID:    types.StringValue(engineer.ID),
 			Name:  types.StringValue(engineer.Name),
 			Email: types.StringValue(engineer.Email),
 		}
@@ -91,7 +112,7 @@ type EngineerDataSourceModel struct {
 
 // engineersModel maps engineers schema data.
 type engineersModel struct {
-	ID    types.Int64  `tfsdk:"id"`
+	ID    types.String `tfsdk:"id"`
 	Name  types.String `tfsdk:"name"`
 	Email types.String `tfsdk:"email"`
 }

@@ -5,7 +5,7 @@ package provider
 
 import (
 	"context"
-	"net/http"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"terraform-provider-devops/internal/provider/client"
 )
 
 // Ensure ScaffoldingProvider satisfies various provider interfaces.
@@ -35,7 +36,7 @@ type ScaffoldingProviderModel struct {
 }
 
 func (p *ScaffoldingProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "scaffolding"
+	resp.TypeName = "devops-bootcamp"
 	resp.Version = p.version
 }
 
@@ -63,10 +64,24 @@ func (p *ScaffoldingProvider) Configure(ctx context.Context, req provider.Config
 	// Configuration values are now available.
 	// if data.Endpoint.IsNull() { /* ... */ }
 
-	// Example client configuration for data sources and resources
-	client := http.DefaultClient
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	// Build API client configuration for data sources and resources
+	var hostPtr *string
+	if !data.Endpoint.IsNull() && !data.Endpoint.IsUnknown() {
+		v := data.Endpoint.ValueString()
+		hostPtr = &v
+	}
+
+	c, err := client.NewClient(hostPtr)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Unable to configure API client",
+			fmt.Sprintf("Could not initialize client: %s", err),
+		)
+		return
+	}
+
+	resp.DataSourceData = c
+	resp.ResourceData = c
 }
 
 func (p *ScaffoldingProvider) Resources(ctx context.Context) []func() resource.Resource {
@@ -84,6 +99,9 @@ func (p *ScaffoldingProvider) EphemeralResources(ctx context.Context) []func() e
 func (p *ScaffoldingProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewEngineerDataSource,
+		NewDevDataSource,
+		NewOpsDataSource,
+		NewDevOpsDataSource,
 	}
 }
 
