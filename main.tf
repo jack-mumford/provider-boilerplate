@@ -1,18 +1,36 @@
 terraform {
   required_providers {
-    devops-bootcamp = {
+    dob = {
       source = "liatr.io/terraform/devops-bootcamp"
     }
   }
 }
 
-provider "devops-bootcamp" {
-  # example configuration here
+provider "dob" {
   endpoint = "http://localhost:8080"
 }
 
-data "devops-bootcamp_engineer" "all" {}
+resource "dob_engineer" "Madi" {
+  name  = "Madi"
+  email = "madi@liatrio.com"
+}
 
-output "engineers" {
-  value = data.devops-bootcamp_engineer.all.engineers
+resource "dob_engineer" "Colin" {
+  name  = "Colin"
+  email = "colin@liatrio.com"
+}
+
+resource "dob_engineer" "Angel" {
+  name  = "Angel"
+  email = "angel@liatrio.com"
+}
+
+resource "dob_engineer" "Austin" {
+  name  = "Austin"
+  email = "austin@liatrio.com"
+}
+
+resource "dob_engineer" "Jack" {
+  name  = "Jack"
+  email = "jack@liatrio.com"
 }

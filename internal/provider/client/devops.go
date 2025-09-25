@@ -8,7 +8,7 @@ import (
 
 // GetDevs - Returns list of devs (no auth required)
 func (c *Client) GetDevs() ([]Dev, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/dev", c.HostURL), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/dev", c.endpoint), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (c *Client) GetDevs() ([]Dev, error) {
 
 // GetOps - Returns list of ops (no auth required)
 func (c *Client) GetOps() ([]Ops, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/op", c.HostURL), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/op", c.endpoint), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *Client) GetOps() ([]Ops, error) {
 
 // GetDevOps - Returns list of devops (no auth required)
 func (c *Client) GetDevOps() ([]DevOps, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/devops", c.HostURL), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/devops", c.endpoint), nil)
 	if err != nil {
 		return nil, err
 	}
