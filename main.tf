@@ -34,3 +34,13 @@ resource "dob_engineer" "Jack" {
   name  = "Jack"
   email = "jack@liatrio.com"
 }
+
+resource "dob_dev" "example" {
+  name = "Dev1"
+  engineers = [
+    dob_engineer.Madi.id,
+    dob_engineer.Colin.id,
+    dob_engineer.Angel.id
+  ]
+}
+

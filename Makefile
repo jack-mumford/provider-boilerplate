@@ -4,7 +4,7 @@
 GOOS?=$$(go env GOOS)
 GOARCH?=$$(go env GOARCH)
 
-plan: clean init provider datasource engineer-resource
+plan: clean init provider datasource engineer-resource dev-resource
 # plan: clean init provider resource datasource debug-allCombined
 
 build: main.go generate

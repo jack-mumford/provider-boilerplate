@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"terraform-provider-devops/internal/provider/client"
+	"terraform-provider-devops/internal/provider/devs"
 	"terraform-provider-devops/internal/provider/engineers"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -84,7 +85,7 @@ func (p *DOBProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *DOBProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		engineers.NewEngineerResource,
-		//devs.NewDevResource,
+		devs.NewDevsResource,
 		//ops.NewOpsResource,
 	}
 }
@@ -92,6 +93,7 @@ func (p *DOBProvider) Resources(_ context.Context) []func() resource.Resource {
 func (p *DOBProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		engineers.NewEngineersDataSource,
+		devs.NewDevsDataSource,
 	}
 }
 
